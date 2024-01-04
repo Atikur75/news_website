@@ -5,9 +5,15 @@ export async function GET(req,res) {
 
     try{
 
+        const {searchParams} = new URL(req.url);
+        const id = parseInt(searchParams.get("id"));
+
         const prisma = new PrismaClient();
 
-        const result = await prisma.categories.findMany();
+        const result = await prisma.news_list.findMany({
+            where : {id : id},
+            include : {categories:true}
+        })
 
         return NextResponse.json({status : "Success", msg : "Category created successfully!", data : result});
     }catch (e) {
